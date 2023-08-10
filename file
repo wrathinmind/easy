@@ -1,0 +1,41 @@
+CREATE FUNCTION dbo.GetSplitTextChunk
+(
+    @inputText NVARCHAR(MAX),
+    @delimiter NVARCHAR(10),
+    @chunkIndex INT
+)
+RETURNS NVARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @startIndex INT,
+            @endIndex INT,
+            @chunkCount INT,
+            @currentChunkIndex INT = 1,
+            @result NVARCHAR(MAX)
+    
+    SET @startIndex = 1
+    SET @chunkCount = LEN(@inputText) - LEN(REPLACE(@inputText, @delimiter, '')) + 1
+    
+    WHILE @startIndex <= LEN(@inputText)
+    BEGIN
+        SET @endIndex = CHARINDEX(@delimiter, @inputText, @startIndex)
+        
+        IF @endIndex = 0
+            SET @endIndex = LEN(@inputText) + 1
+        
+        IF @currentChunkIndex = @chunkIndex
+        BEGIN
+            SET @result = SUBSTRING(@inputText, @startIndex, @endIndex - @startIndex)
+            BREAK
+        END
+        
+        SET @startIndex = @endIndex + LEN(@delimiter)
+        SET @currentChunkIndex = @currentChunkIndex + 1
+    END
+    
+    RETURN @result
+END;
+
+select dbo.GetSplitTextChunk(dbo.GetSplitTextChunk(name, '#', 1), '=', 2), dbo.GetSplitTextChunk(dbo.GetSplitTextChunk(name, '#', 2), '=', 2) from t;
+
+
