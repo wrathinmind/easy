@@ -1,4 +1,4 @@
-CREATE FUNCTION dbo.GetSplitTextChunk
+CREATE FUNCTION iz.GetSplitTextChunk
 (
     @inputText NVARCHAR(MAX),
     @delimiter NVARCHAR(10),
@@ -36,6 +36,6 @@ BEGIN
     RETURN @result
 END;
 
-select dbo.GetSplitTextChunk(dbo.GetSplitTextChunk(name, '#', 1), '=', 2), dbo.GetSplitTextChunk(dbo.GetSplitTextChunk(name, '#', 2), '=', 2) from t;
+select iz.GetSplitTextChunk(iz.GetSplitTextChunk(name, '#', 1), '=', 2), iz.GetSplitTextChunk(iz.GetSplitTextChunk(name, '#', 2), '=', 2) from t;
 
 
